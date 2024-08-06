@@ -1,3 +1,6 @@
+import matplotlib.pyplot as plt
+
+
 
 
 # plotting tools for plotting from cif files

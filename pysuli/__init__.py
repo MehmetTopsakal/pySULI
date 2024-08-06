@@ -49,6 +49,7 @@ if not os.path.isdir(os.path.join(user_home,'.gsas2_scratch')):
     os.mkdir(os.path.join(user_home,'.gsas2_scratch'))
 
 # Setting up gsas2_lib folder
+
 gsasii_loc = input("\n\nEnter location of GSASII folder on your GSAS-II installation\n\n")
 sys.path += [gsasii_loc]
 try:

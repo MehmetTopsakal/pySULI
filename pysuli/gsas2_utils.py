@@ -429,7 +429,7 @@ class Refiner:
 
             # set gsas intensity profile and save as xy file in gsas2_scratch directory
             Y_to_gsas = self.y_baseline+Y_to_gsas*self.y_scale
-            X_to_gsas = np.rad2deg(functions_lib_version.q_to_twotheta(self.da_i2d_m.radial.values, wavelength=(ds.attrs['wavelength']*1.0e10)))
+            X_to_gsas = np.rad2deg(q_to_twotheta(self.da_i2d_m.radial.values, wavelength=(ds.attrs['wavelength']*1.0e10)))
             np.savetxt('%s/data.xy'%self.gsas2_scratch, np.column_stack( (X_to_gsas,Y_to_gsas) ), fmt='%.4f %.4f')
 
             # save ds as an instance variable
@@ -476,7 +476,7 @@ class Refiner:
             {"X_in_tth": gsas_X.astype('float32')},
             )
         self.ds = self.ds.assign_coords(
-            {"X_in_d": functions_lib_version.q_to_d(self.da_i2d_m.radial.values.astype('float32'))},
+            {"X_in_d": q_to_d(self.da_i2d_m.radial.values.astype('float32'))},
             )
 
         self.ds['Y_obs'] = xr.DataArray(
@@ -611,14 +611,14 @@ class Refiner:
         ax.set_xticklabels(x_ticks)
 
         # find lattice constants for each phase and save them to use as label strings in subplot 2
-        phases = functions_lib_version.get_valid_phases(self.gpx)
+        phases = get_valid_phases(self.gpx)
         phase_ct = len(phases)
         label_strs = [None] * phase_ct
         label_colors = [None] * phase_ct
         for ep, phase in enumerate(phases):
             label_strs[ep] = phase
             consts = iter(['a', 'b', 'c'])
-            for value in np.unique(list(functions_lib_version.get_cell_consts(self.gpx, phase).values())):
+            for value in np.unique(list(get_cell_consts(self.gpx, phase).values())):
                 label_strs[ep] = label_strs[ep] + "\n(" + next(consts) + " = " + str(round(value,6)) + ")"
             label_colors[ep] = "C%d" % ep
 
@@ -640,12 +640,12 @@ class Refiner:
         ax = ax_dict["Y"]
         ax_bottom = ax_dict["P"]
         ax_bottom.sharex(ax_dict["R"])
-        functions_lib_version.gpx_plotter(
+        gpx_plotter(
             self.gpx,
             line_axes=[ax,ax_bottom],
             stem_axes=[ax_bottom],
             radial_range=plt_range,
-            phases=functions_lib_version.get_valid_phases(self.gpx),
+            phases=get_valid_phases(self.gpx),
             marker="o",
             stem=True,
             unit="d",
@@ -790,7 +790,7 @@ class Refiner:
                     print("Note, wavelength not found; using previous wavelength")
                 ds.attrs["wavelength"] = wavelength
             
-            X_to_gsas = np.rad2deg(functions_lib_version.q_to_twotheta(self.da_i2d_m.radial.values, wavelength=(ds.attrs['wavelength']*1.0e10)))
+            X_to_gsas = np.rad2deg(q_to_twotheta(self.da_i2d_m.radial.values, wavelength=(ds.attrs['wavelength']*1.0e10)))
             np.savetxt('%s/data.xy'%self.gsas2_scratch, np.column_stack( (X_to_gsas,Y_to_gsas) ), fmt='%.4f %.4f')
 
             # save ds as an instance variable
@@ -1124,7 +1124,7 @@ class seqRefiner:
 
                 # set gsas intensity profile and save as xy file in gsas2_scratch directory
                 Y_to_gsas = self.y_baseline+Y_to_gsas*self.y_scale
-                X_to_gsas = np.rad2deg(functions_lib_version.q_to_twotheta(da_i2d_m.radial.values, wavelength=(self.wavelength*1.0e10)))
+                X_to_gsas = np.rad2deg(q_to_twotheta(da_i2d_m.radial.values, wavelength=(self.wavelength*1.0e10)))
                 np.savetxt('%s/data.xy'%self.gsas2_scratch, np.column_stack( (X_to_gsas,Y_to_gsas) ), fmt='%.4f %.4f')
 
                 # save ds in the array of all the datasets
@@ -1173,7 +1173,7 @@ class seqRefiner:
                 {"X_in_tth": gsas_X.astype('float32')},
                 )
             self.ds_list[i] = self.ds_list[i].assign_coords(
-                {"X_in_d": functions_lib_version.q_to_d(da_i2d_m.radial.values.astype('float32'))},
+                {"X_in_d": q_to_d(da_i2d_m.radial.values.astype('float32'))},
                 )
 
             self.ds_list[i]['Y_obs'] = xr.DataArray(
@@ -1372,14 +1372,14 @@ class seqRefiner:
         ax.set_xticklabels(x_ticks)
 
         # find lattice constants for each phase and save them to use as label strings in subplot 2
-        phases = functions_lib_version.get_valid_phases(self.gpx)
+        phases = get_valid_phases(self.gpx)
         phase_ct = len(phases)
         label_strs = [None] * phase_ct
         label_colors = [None] * phase_ct
         for ep, phase in enumerate(phases):
             label_strs[ep] = phase
             consts = iter(['a', 'b', 'c'])
-            for value in np.unique(list(functions_lib_version.get_cell_consts(self.gpx, phase).values())):
+            for value in np.unique(list(get_cell_consts(self.gpx, phase).values())):
                 label_strs[ep] = label_strs[ep] + "\n(" + next(consts) + " = " + str(round(value,6)) + ")"
             label_colors[ep] = "C%d" % ep
 
@@ -1399,12 +1399,12 @@ class seqRefiner:
         ax = ax_dict["Y"]
         ax_bottom = ax_dict["P"]
         ax_bottom.sharex(ax_dict["R"])
-        functions_lib_version.gpx_plotter(
+        gpx_plotter(
             self.gpx,
             line_axes=[ax,ax_bottom],
             stem_axes=[ax_bottom],
             radial_range=plt_range,
-            phases=functions_lib_version.get_valid_phases(self.gpx),
+            phases=get_valid_phases(self.gpx),
             marker="o",
             stem=True,
             unit="d",
@@ -1505,14 +1505,14 @@ class seqRefiner:
         ax.set_xticklabels(x_ticks)
 
         # find lattice constants for each phase and save them to use as label strings in subplot 2
-        phases = functions_lib_version.get_valid_phases(self.gpx)
+        phases = get_valid_phases(self.gpx)
         phase_ct = len(phases)
         label_strs = [None] * phase_ct
         label_colors = [None] * phase_ct
         for ep, phase in enumerate(phases):
             label_strs[ep] = phase
             consts = iter(['a', 'b', 'c'])
-            for value in np.unique(list(functions_lib_version.get_cell_consts(self.gpx, phase).values())):
+            for value in np.unique(list(get_cell_consts(self.gpx, phase).values())):
                 label_strs[ep] = label_strs[ep] + "\n(" + next(consts) + " = " + str(round(value,6)) + ")"
             label_colors[ep] = "C%d" % ep
 
@@ -1533,12 +1533,12 @@ class seqRefiner:
         ax = ax_dict["Y"]
         ax_bottom = ax_dict["P"]
         ax_bottom.sharex(ax_dict["R"])
-        functions_lib_version.gpx_plotter(
+        gpx_plotter(
             self.gpx,
             line_axes=[ax,ax_bottom],
             stem_axes=[ax_bottom],
             radial_range=plt_range,
-            phases=functions_lib_version.get_valid_phases(self.gpx),
+            phases=get_valid_phases(self.gpx),
             marker="o",
             stem=True,
             unit="d",
