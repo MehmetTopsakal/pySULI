@@ -7,5 +7,7 @@ Students who contributed to this repo:
 2024-Summer:
 - Peter Meshkov (Stony Brook University, https://github.com/pmeshkov)
 - Kevin Morell (University of South Carolina, https://github.com/KMorell)
+
+2026-Summer:
 - Noah Berlin (University of Michigan, https://github.com/berlin596)
 
